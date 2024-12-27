@@ -46,7 +46,6 @@ void print_grid(char grid[MAX_GRID][MAX_GRID], int size);
 int main()
 {
     int task,RobotX1,RobotY1,result1;
-    bool result3;
     char grid[MAX_GRID][MAX_GRID];
     do
     {
@@ -320,7 +319,7 @@ bool fill_crossword(char grid[MAX_GRID][MAX_GRID], Slot slots[MAX_WORDS], int sl
     Slot slot = slots[current_slot];
     for (int i = 0; i < slot_count; i++) 
     { 
-        if (!used[i] && strlen(words[i]) == slot.length && can_place_word(grid, slot, words[i]))
+    if (!used[i] && strlen(words[i]) == (size_t)slot.length && can_place_word(grid, slot, words[i]))
         {
             place_word(grid, slot, words[i]);
             used[i] = true;
@@ -379,7 +378,7 @@ void place_word(char grid[MAX_GRID][MAX_GRID], Slot slot, const char word[MAX_WO
     }
 }
 
-void remove_word(char grid[MAX_GRID][MAX_GRID], Slot slot, const char word[MAX_WORD_LENGTH + 1])
+void remove_word(char grid[MAX_GRID][MAX_GRID], Slot slot)
 {
     int row = slot.row;
     int col = slot.col;
