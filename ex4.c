@@ -189,6 +189,11 @@ void task4_queens_battle()
     char solution[MAX_N][MAX_N];
     printf("Please enter the board dimensions:\n");
     scanf("%d", &N);
+    if(N < 3)
+    {
+        printf("This puzzle cannot be solved.\n");
+        return;
+    }
     read_board(N, board);
     initialize_solution(solution, N);
     if (solve(N, board, solution))
