@@ -421,6 +421,6 @@ void print_grid(char grid[MAX_GRID][MAX_GRID], int size)
                 printf(" | ");
             }
         }
-        printf(" |\n");
+        printf("|\n");
     }
 }
