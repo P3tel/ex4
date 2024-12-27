@@ -189,11 +189,7 @@ void task4_queens_battle()
     char solution[MAX_N][MAX_N];
     printf("Please enter the board dimensions:\n");
     scanf("%d", &N);
-    if(N < 3)
-    {
-        printf("This puzzle cannot be solved.\n");
-        return;
-    }
+
     read_board(N, board);
     initialize_solution(solution, N);
     if (solve(N, board, solution))
@@ -241,6 +237,8 @@ bool place_queen(int row, int col, int N, char board[MAX_N][MAX_N], char solutio
 
 bool solve(int N, char board[MAX_N][MAX_N], char solution[MAX_N][MAX_N])
 {
+    if(N < 3)
+        return false;
     bool rows[MAX_N] = {false};
     bool cols[MAX_N] = {false};
     bool regions[All_ASCII] = {false};
@@ -316,9 +314,9 @@ void task5_crossword_generator(char grid[MAX_GRID][MAX_GRID])
 
     if (fill_crossword(grid, slots, slot_count, words, used, 0))
     {
-        printf("The filled crossword grid is:\n");
         print_grid(grid, size);
-    } else {
+    } else
+    {
         printf("This crossword cannot be solved.\n");
     }
 }
