@@ -2,7 +2,7 @@
 Name:Ori Bahat-Petel
 ID:331753830
 Assignment:ex4
-*/
+***/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -413,6 +413,7 @@ void print_grid(char grid[MAX_GRID][MAX_GRID], int size)
 {
     for (int i = 0; i < size; i++) 
     {
+        printf("| ");
         for (int j = 0; j < size; j++)
         {
             printf("%c", grid[i][j]);
@@ -420,6 +421,6 @@ void print_grid(char grid[MAX_GRID][MAX_GRID], int size)
                 printf(" | ");
             }
         }
-        printf("\n");
+        printf(" |\n");
     }
 }
