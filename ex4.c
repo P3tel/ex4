@@ -1,8 +1,8 @@
-/******
+/**
 Name:Ori Bahat-Petel
 ID:331753830
 Assignment:ex4
-*******/
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -24,8 +24,9 @@ typedef struct
 
 int task1_robot_paths();
 
-double task2_human_pyramid(int r,int c, double weight[LENG2][LENG2]);
+double task2_human_pyramid(int r,int c, double weight[LENG2][LENG2], double memo[LENG2][LENG2]);
 
+void clear_input_buffer();
 bool task3_parenthesis_validator(char expect);
 
 void task4_queens_battle();
@@ -70,12 +71,13 @@ int main()
                 break;
             case 2:
                 double weights[LENG2][LENG2] = {0};
-                printf("Please enter the weights of the cheerleaders:\n");
+                double memory[LENG2][LENG2];
                 printf("Please enter the weights of the cheerleaders:\n");
                 for (int i = 0; i < 5; i++) 
                 {
                     for (int j = 0; j <= i; j++)
                     {
+                        memory[i][j] = -1;
                         do{
                             scanf("%lf", &weights[i][j]);
                             if(weights[i][j] < 0)
@@ -83,19 +85,18 @@ int main()
                         }while (weights[i][j] < 0);
                     }
                 }       
-
                 printf("The total weight on each cheerleader is:\n");
                 for (int i = 0; i < LENG2; i++) 
                 {
                     for (int j = 0; j <= i; j++) 
                     {
-                        printf("%.2lf ", task2_human_pyramid(i, j, weights));
+                        printf("%.2lf ", task2_human_pyramid(i, j, weights, memory));
                     }
                     printf("\n");
                 }
                 break;
             case 3:
-                getchar();
+                clear_input_buffer();
                 printf("Please enter a term for validation:\n");
                 if(task3_parenthesis_validator('\0'))
                     printf("The parentheses are balanced correctly.\n");
@@ -131,14 +132,23 @@ int task1_robot_paths(int RobotX,int RobotY)
     return task1_robot_paths(RobotX - 1,RobotY) + task1_robot_paths(RobotX,RobotY - 1);
 }
 
-double task2_human_pyramid(int r, int c, double weights[5][5])
+double task2_human_pyramid(int r, int c, double weights[LENG2][LENG2], double memo[LENG2][LENG2])
 {
     if (r >= LENG2)
         return 0;
-    double leftWeight = 0.5 * task2_human_pyramid(r + 1, c, weights);
-    double rightWeight = 0.5 * task2_human_pyramid(r + 1, c + 1, weights);
-    return leftWeight + rightWeight + weights[r][c];
+    if (memo[r][c] != -1)
+        return memo[r][c];
+    double leftWeight = 0.5 * task2_human_pyramid(r + 1, c, weights, memo);
+    double rightWeight = 0.5 * task2_human_pyramid(r + 1, c + 1, weights, memo);
+    memo[r][c] = leftWeight + rightWeight + weights[r][c];
+    return memo[r][c];
 }
+
+void clear_input_buffer()
+{
+    while (getchar() != '\n');
+}
+
 
 bool task3_parenthesis_validator(char expect)
 {
@@ -154,7 +164,7 @@ bool task3_parenthesis_validator(char expect)
     {
         return expect == '\0';
     }
-    
+
     if (ch == '(' || ch == '[' || ch == '{' || ch == '<')
     {
         char match = (ch == '(') ? ')' :
@@ -246,7 +256,7 @@ void print_solution(char solution[MAX_N][MAX_N], int N)
 
 void read_board(int N, char board[MAX_N][MAX_N])
 {
-    printf("Please enter the %d*%d puzzle board:\n", N, N);
+    printf("Please enter a %d*%d puzzle board:\n", N, N);
     for (int i = 0; i < N; i++) 
     {
         for (int j = 0; j < N; j++) 
@@ -284,9 +294,8 @@ void task5_crossword_generator(char grid[MAX_GRID][MAX_GRID])
     {
         scanf("%d %d %d %c", &slots[i].row, &slots[i].col, &slots[i].length, &slots[i].direction);
     }
-
+    printf("Please enter the number of words in the dictionary:\n");
     do {
-        printf("Please enter the number of words in the dictionary:\n");
         scanf("%d", &word_count);
         if (word_count < slot_count)
         {
