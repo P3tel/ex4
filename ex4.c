@@ -328,7 +328,7 @@ bool fill_crossword(char grid[MAX_GRID][MAX_GRID], Slot slots[MAX_WORDS], int sl
             {
                 return true;
             }
-            remove_word(grid, slot, words[i]);
+            remove_word(grid, slot);
             used[i] = false;
         }
     }
