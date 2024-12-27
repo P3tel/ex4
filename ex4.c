@@ -40,7 +40,7 @@ void task5_crossword_generator(char grid[MAX_GRID][MAX_GRID]);
 bool fill_crossword(char grid[MAX_GRID][MAX_GRID], Slot slots[MAX_WORDS], int slot_count, char words[MAX_WORDS][MAX_WORD_LENGTH + 1], bool used[MAX_WORDS], int current_slot);
 bool can_place_word(char grid[MAX_GRID][MAX_GRID], Slot slot, const char word[MAX_WORD_LENGTH + 1]);
 void place_word(char grid[MAX_GRID][MAX_GRID], Slot slot, const char word[MAX_WORD_LENGTH + 1]);
-void remove_word(char grid[MAX_GRID][MAX_GRID], Slot slot, const char word[MAX_WORD_LENGTH + 1]);
+void remove_word(char grid[MAX_GRID][MAX_GRID], Slot slot);
 void print_grid(char grid[MAX_GRID][MAX_GRID], int size);
 
 int main()
