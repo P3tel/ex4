@@ -24,7 +24,7 @@ typedef struct
 
 int task1_robot_paths();
 
-double task2_human_pyramid(int r,int c, double weight[LENG2][LENG2], double memo[LENG2][LENG2]);
+double task2_human_pyramid(int r,int c, double weight[LENG2][LENG2]);
 
 void clear_input_buffer();
 bool task3_parenthesis_validator(char expect);
@@ -48,6 +48,7 @@ int main()
 {
     int task,RobotX1,RobotY1,result1;
     char grid[MAX_GRID][MAX_GRID];
+    double weights[LENG2][LENG2];
     do
     {
         printf("Choose an option:\n"
@@ -70,27 +71,29 @@ int main()
                 printf("The total number of paths the robot can take to reach home is: %d\n",result1);
                 break;
             case 2:
-                double weights[LENG2][LENG2] = {0};
-                double memory[LENG2][LENG2];
+                bool notNegative = true;
                 printf("Please enter the weights of the cheerleaders:\n");
-                for (int i = 0; i < 5; i++) 
+                for (int i = 0; i < 5 && notNegative; i++) 
                 {
                     for (int j = 0; j <= i; j++)
                     {
-                        memory[i][j] = -1;
-                        do{
                             scanf("%lf", &weights[i][j]);
                             if(weights[i][j] < 0)
+                            {
                                 printf("Negative weights are not supported.\n");
-                        }while (weights[i][j] < 0);
+                                notNegative = false;
+                                break;
+                            }
                     }
-                }       
+                }    
+                if(!notNegative)
+                    break;
                 printf("The total weight on each cheerleader is:\n");
                 for (int i = 0; i < LENG2; i++) 
                 {
                     for (int j = 0; j <= i; j++) 
                     {
-                        printf("%.2lf ", task2_human_pyramid(i, j, weights, memory));
+                        printf("%.2lf ", task2_human_pyramid(i, j, weights));
                     }
                     printf("\n");
                 }
@@ -132,16 +135,18 @@ int task1_robot_paths(int RobotX,int RobotY)
     return task1_robot_paths(RobotX - 1,RobotY) + task1_robot_paths(RobotX,RobotY - 1);
 }
 
-double task2_human_pyramid(int r, int c, double weights[LENG2][LENG2], double memo[LENG2][LENG2])
+double task2_human_pyramid(int r, int c, double weights[LENG2][LENG2])
 {
-    if (r >= LENG2)
-        return 0;
-    if (memo[r][c] != -1)
-        return memo[r][c];
-    double leftWeight = 0.5 * task2_human_pyramid(r + 1, c, weights, memo);
-    double rightWeight = 0.5 * task2_human_pyramid(r + 1, c + 1, weights, memo);
-    memo[r][c] = leftWeight + rightWeight + weights[r][c];
-    return memo[r][c];
+    if (r == 0)
+    {
+        if(c == 0) 
+            return weights[0][0];
+        else
+            return 0;
+    }
+    double left = 0.5 * task2_human_pyramid(r - 1, c, weights);
+    double right = 0.5 * task2_human_pyramid(r - 1, c -1, weights);
+    return left + right + weights[r][c];
 }
 
 void clear_input_buffer()
@@ -153,33 +158,39 @@ void clear_input_buffer()
 bool task3_parenthesis_validator(char expect)
 {
     char ch;
-    do {
-        if (scanf("%c", &ch) != 1) 
+    while (true)
+    {
+        if (scanf("%c", &ch) != 1)
         {
             return expect == '\0';
         }
-    } while (ch == ' ');
 
-    if (ch == '\n')
-    {
-        return expect == '\0';
-    }
-
-    if (ch == '(' || ch == '[' || ch == '{' || ch == '<')
-    {
-        char match = (ch == '(') ? ')' :
-                     (ch == '[') ? ']' :
-                     (ch == '{') ? '}' : '>';
-        if (!task3_parenthesis_validator(match)) 
+        if (ch == ' ' || ch == '\t')
         {
-            return false;
+            continue;
         }
-        return task3_parenthesis_validator(expect);
+
+        if (ch == '\n') // End of line
+        {
+            return expect == '\0';
+        }
+
+        if (ch == '(' || ch == '[' || ch == '{' || ch == '<')
+        {
+            char match = (ch == '(') ? ')' :
+                         (ch == '[') ? ']' :
+                         (ch == '{') ? '}' : '>';
+            if (!task3_parenthesis_validator(match)) 
+            {
+                return false;
+            }
+            return task3_parenthesis_validator(expect);
+        }
+        if (ch == ')' || ch == ']' || ch == '}' || ch == '>') 
+        {
+            return ch == expect;
+        }
     }
-    if (ch == ')' || ch == ']' || ch == '}' || ch == '>') {
-        return ch == expect;
-    }
-    return task3_parenthesis_validator(expect);
 }
 
 void task4_queens_battle()
@@ -192,6 +203,7 @@ void task4_queens_battle()
 
     read_board(N, board);
     initialize_solution(solution, N);
+    
     if (solve(N, board, solution))
     {
         printf("Solution:\n");
