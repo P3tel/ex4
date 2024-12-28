@@ -163,7 +163,7 @@ void clear_input_buffer()
 
 bool task3_parenthesis_validator(char expect) {
     char ch;
-    while (scanf("%c", &ch) == 1) {
+    while (scanf("%1c", &ch) == 1) {
         if (ch == ' ' || ch == '\t') {
             continue;
         }
