@@ -95,18 +95,22 @@ int main()
                     for (int j = 0; j <= i; j++) 
                     {
                         double w = task2_human_pyramid(i, j, weights);
-                        printf("%.2lf ", round_decimal(w));
+                        printf("%.2lf ", w);
                     }
                     printf("\n");
                 }
                 break;
             case 3:
-                clear_input_buffer();
+                if(task != 3)
+                    break;
                 printf("Please enter a term for validation:\n");
+                clear_input_buffer();
                 if(task3_parenthesis_validator('\0'))
                     printf("The parentheses are balanced correctly.\n");
                 else
                     printf("The parentheses are not balanced correctly.\n");
+                clear_input_buffer();
+
                 break;
             case 4:
                 task4_queens_battle();
@@ -161,34 +165,39 @@ void clear_input_buffer()
     while (getchar() != '\n');
 }
 
-bool task3_parenthesis_validator(char expect) {
+bool task3_parenthesis_validator(char expect)
+{
     char ch;
-    while (scanf("%1c", &ch) == 1) {
-        if (ch == ' ' || ch == '\t') {
-            continue;
+    while (scanf("%1c", &ch) == 1) 
+    { 
+        if (ch == '\n') 
+        {
+            return expect == '\0';  // If we reach a newline, expect should be '\0' for balanced parentheses.
         }
-        if (ch == '\n') {
-            return expect == '\0'; 
-        }
-        if (ch == '(' || ch == '[' || ch == '{' || ch == '<') {
+
+        if (ch == '(' || ch == '[' || ch == '{' || ch == '<') 
+        {
+            // Opening brackets, pass the expected closing character to the next recursion level
             char match = (ch == '(') ? ')' :
                          (ch == '[') ? ']' :
                          (ch == '{') ? '}' : '>';
-            if (!task3_parenthesis_validator(match)) 
-            {
-                return false;
+            if (!task3_parenthesis_validator(match)) {
+                return false;  // If we don't find a matching parenthesis, return false
             }
         } 
         else if (ch == ')' || ch == ']' || ch == '}' || ch == '>') 
         {
+            // Closing brackets, check if it matches the expected character
             return ch == expect;
         } 
         else 
         {
-            return false;
+            // Ignore non-parenthesis characters, no recursion needed here
+            continue;
         }
     }
-    return expect == '\0';
+
+    return expect == '\0';  // Ensure we finish the recursion properly when everything is balanced
 }
 
 void task4_queens_battle()
