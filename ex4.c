@@ -30,7 +30,7 @@ void clear_input_buffer();
 bool task3_parenthesis_validator(char expect);
 
 void task4_queens_battle();
-void initialize_solution(char solution[MAX_N][MAX_N], int N);
+void reset_solution(char solution[MAX_N][MAX_N], int N);
 bool is_safe(int row, int col, char board[MAX_N][MAX_N], bool rows[MAX_N], bool cols[MAX_N], bool regions[All_ASCII], char solution[MAX_N][MAX_N], int N);
 bool place_queen(int row, int col, int N, char board[MAX_N][MAX_N], char solution[MAX_N][MAX_N], bool rows[MAX_N], bool cols[MAX_N], bool regions[All_ASCII]);
 bool solve(int N, char board[MAX_N][MAX_N], char solution[MAX_N][MAX_N]);
@@ -155,29 +155,16 @@ void clear_input_buffer()
     while (getchar() != '\n');
 }
 
-
-bool task3_parenthesis_validator(char expect)
-{
+bool task3_parenthesis_validator(char expect) {
     char ch;
-    while (true)
-    {
-        if (scanf("%c", &ch) != 1)
-        {
-            return expect == '\0';
-        }
-
-        if (ch == ' ' || ch == '\t')
-        {
+    while (scanf("%c", &ch) == 1) {
+        if (ch == ' ' || ch == '\t') {
             continue;
         }
-
-        if (ch == '\n')
-        {
-            return expect == '\0';
+        if (ch == '\n') {
+            return expect == '\0'; 
         }
-
-        if (ch == '(' || ch == '[' || ch == '{' || ch == '<')
-        {
+        if (ch == '(' || ch == '[' || ch == '{' || ch == '<') {
             char match = (ch == '(') ? ')' :
                          (ch == '[') ? ']' :
                          (ch == '{') ? '}' : '>';
@@ -185,13 +172,17 @@ bool task3_parenthesis_validator(char expect)
             {
                 return false;
             }
-            return task3_parenthesis_validator(expect);
-        }
-        if (ch == ')' || ch == ']' || ch == '}' || ch == '>') 
+        } 
+        else if (ch == ')' || ch == ']' || ch == '}' || ch == '>') 
         {
             return ch == expect;
+        } 
+        else 
+        {
+            return false;
         }
     }
+    return expect == '\0';
 }
 
 void task4_queens_battle()
@@ -203,7 +194,7 @@ void task4_queens_battle()
     scanf("%d", &N);
 
     read_board(N, board);
-    initialize_solution(solution, N);
+    reset_solution(solution, N);
     
     if (solve(N, board, solution))
     {
@@ -216,7 +207,7 @@ void task4_queens_battle()
     }
 }
 
-void initialize_solution(char solution[MAX_N][MAX_N], int N) {
+void reset_solution(char solution[MAX_N][MAX_N], int N) {
     for (int i = 0; i < N; i++)
     {
         for (int j = 0; j < N; j++)
