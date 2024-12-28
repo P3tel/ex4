@@ -153,17 +153,19 @@ int task1_robot_paths(int RobotX,int RobotY)
 
 double round_decimal(double number) 
 {
-    number *= 1000;
+    number *= 100;
     int intPart = (int)number;
     double decimalPart = number - intPart;
-    if (decimalPart >= 0.5) 
+    double result = 0;
+    if (decimalPart >= 0.4999999) 
     {
-        return (intPart + 1) / 1000.0;
+        result = (intPart + 1) / 100.0;
     } 
     else
     {
-        return intPart / 1000.0;
+        result = intPart / 100.0;
     }
+    return result;
 }
 
 double task2_human_pyramid(int r, int c, double weights[LENG2][LENG2])
