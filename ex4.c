@@ -47,7 +47,8 @@ void print_grid(char grid[MAX_GRID][MAX_GRID], int size);
 
 int main()
 {
-    int task,RobotX1,RobotY1,result1;
+    char task;
+    int RobotX1,RobotY1,result1;
     char grid[MAX_GRID][MAX_GRID];
     double weights[LENG2][LENG2];
     do
@@ -59,19 +60,20 @@ int main()
                "4. Queens Battle\n"
                "5. Crossword Generator\n"
                "6. Exit\n");
-        scanf("%d", &task);
+        scanf("%1c", &task);
+        clear_input_buffer();
             switch (task)
             {
-            case 6:
+            case '6':
                 printf("Goodbye!\n");
                 break;
-            case 1:
+            case '1':
                 printf("Please enter the coordinates of the robot (column, row):\n");
                 scanf("%d %d",&RobotX1,&RobotY1);
                 result1 = task1_robot_paths(RobotX1,RobotY1);
                 printf("The total number of paths the robot can take to reach home is: %d\n",result1);
                 break;
-            case 2:
+            case '2':
                 bool notNegative = true;
                 printf("Please enter the weights of the cheerleaders:\n");
                 for (int i = 0; i < 5 && notNegative; i++) 
@@ -88,34 +90,34 @@ int main()
                     }
                 }    
                 if(!notNegative)
+                {
+                    clear_input_buffer();
                     break;
+                }
                 printf("The total weight on each cheerleader is:\n");
                 for (int i = 0; i < LENG2; i++) 
                 {
                     for (int j = 0; j <= i; j++) 
                     {
                         double w = task2_human_pyramid(i, j, weights);
-                        printf("%.2lf ", w);
+                        printf("%.2lf ", round_decimal(w));
                     }
                     printf("\n");
                 }
-                break;
-            case 3:
-                if(task != 3)
-                    break;
-                printf("Please enter a term for validation:\n");
                 clear_input_buffer();
+                break;
+            case '3':
+                printf("Please enter a term for validation:\n");
                 if(task3_parenthesis_validator('\0'))
                     printf("The parentheses are balanced correctly.\n");
-                else
+                else {
                     printf("The parentheses are not balanced correctly.\n");
-                clear_input_buffer();
-
+                    clear_input_buffer(); }
                 break;
-            case 4:
+            case '4':
                 task4_queens_battle();
                 break;
-            case 5:
+            case '5':
                 for (int i = 0; i < MAX_GRID; i++)
                 {
                     for (int j = 0; j < MAX_GRID; j++) 
@@ -129,7 +131,7 @@ int main()
                 printf("Please choose a task number from the list.\n");
                 break;
             }
-    } while (task != 6);
+    } while (task != '6');
 }
 
 int task1_robot_paths(int RobotX,int RobotY)
@@ -143,7 +145,7 @@ int task1_robot_paths(int RobotX,int RobotY)
 
 double round_decimal(double value)
 {
-    return ((int)(value * 100 + 0.5)) / 100.0;
+    return ((int)(value * 100 + 0.9)) / 100.0;
 }
 
 double task2_human_pyramid(int r, int c, double weights[LENG2][LENG2])
@@ -155,6 +157,8 @@ double task2_human_pyramid(int r, int c, double weights[LENG2][LENG2])
         else
             return 0;
     }
+    if(c < 0)
+        return 0;
     double left = 0.5 * task2_human_pyramid(r - 1, c, weights);
     double right = 0.5 * task2_human_pyramid(r - 1, c -1, weights);
     return left + right + weights[r][c];
@@ -162,7 +166,9 @@ double task2_human_pyramid(int r, int c, double weights[LENG2][LENG2])
 
 void clear_input_buffer()
 {
-    while (getchar() != '\n');
+    char c = getchar();
+    while (c != '\n' && c != ' ')
+        c = getchar();
 }
 
 bool task3_parenthesis_validator(char expect)
@@ -172,7 +178,7 @@ bool task3_parenthesis_validator(char expect)
     { 
         if (ch == '\n') 
         {
-            return expect == '\0'; 
+            return expect == '\0';
         }
 
         if (ch == '(' || ch == '[' || ch == '{' || ch == '<') 
@@ -181,7 +187,7 @@ bool task3_parenthesis_validator(char expect)
                          (ch == '[') ? ']' :
                          (ch == '{') ? '}' : '>';
             if (!task3_parenthesis_validator(match)) {
-                return false; 
+                return false;
             }
         } 
         else if (ch == ')' || ch == ']' || ch == '}' || ch == '>') 
