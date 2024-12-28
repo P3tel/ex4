@@ -72,6 +72,7 @@ int main()
                 scanf("%d %d",&RobotX1,&RobotY1);
                 result1 = task1_robot_paths(RobotX1,RobotY1);
                 printf("The total number of paths the robot can take to reach home is: %d\n",result1);
+                clear_input_buffer();
                 break;
             case '2':
                 bool notNegative = true;
@@ -116,6 +117,7 @@ int main()
                 break;
             case '4':
                 task4_queens_battle();
+                clear_input_buffer();
                 break;
             case '5':
                 for (int i = 0; i < MAX_GRID; i++)
@@ -126,6 +128,7 @@ int main()
                     }
                 }       
                 task5_crossword_generator(grid);
+                clear_input_buffer();
                 break;
             default:
                 printf("Please choose a task number from the list.\n");
