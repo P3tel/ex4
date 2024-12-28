@@ -25,10 +25,10 @@ typedef struct
 int task1_robot_paths();
 
 double task2_human_pyramid(int r,int c, double weight[LENG2][LENG2]);
-double round_decimal(double value);
+double round_decimal(double number);
 
 void clear_input_buffer();
-bool task3_parenthesis_validator(char expect);
+int task3_parenthesis_validator(char expect);
 
 void task4_queens_battle();
 void reset_solution(char solution[MAX_N][MAX_N], int N);
@@ -109,11 +109,16 @@ int main()
                 break;
             case '3':
                 printf("Please enter a term for validation:\n");
-                if(task3_parenthesis_validator('\0'))
+                int ans3 = task3_parenthesis_validator('\0');
+                if(ans3 == 1)
                     printf("The parentheses are balanced correctly.\n");
-                else {
+                else if(ans3 == 0) 
+                {
                     printf("The parentheses are not balanced correctly.\n");
-                    clear_input_buffer(); }
+                    clear_input_buffer();
+                }
+                else
+                    printf("The parentheses are not balanced correctly.\n");
                 break;
             case '4':
                 task4_queens_battle();
@@ -146,9 +151,19 @@ int task1_robot_paths(int RobotX,int RobotY)
     return task1_robot_paths(RobotX - 1,RobotY) + task1_robot_paths(RobotX,RobotY - 1);
 }
 
-double round_decimal(double value)
+double round_decimal(double number) 
 {
-    return ((int)(value * 100 + 0.9)) / 100.0;
+    number *= 1000;
+    int intPart = (int)number;
+    double decimalPart = number - intPart;
+    if (decimalPart >= 0.5) 
+    {
+        return (intPart + 1) / 1000.0;
+    } 
+    else
+    {
+        return intPart / 1000.0;
+    }
 }
 
 double task2_human_pyramid(int r, int c, double weights[LENG2][LENG2])
@@ -174,7 +189,7 @@ void clear_input_buffer()
         c = getchar();
 }
 
-bool task3_parenthesis_validator(char expect)
+int task3_parenthesis_validator(char expect)
 {
     char ch;
     while (scanf("%1c", &ch) == 1) 
@@ -190,7 +205,7 @@ bool task3_parenthesis_validator(char expect)
                          (ch == '[') ? ']' :
                          (ch == '{') ? '}' : '>';
             if (!task3_parenthesis_validator(match)) {
-                return false;
+                return 2;
             }
         } 
         else if (ch == ')' || ch == ']' || ch == '}' || ch == '>') 
