@@ -31,7 +31,7 @@ bool task3_parenthesis_validator(char expect);
 
 void task4_queens_battle();
 void initialize_solution(char solution[MAX_N][MAX_N], int N);
-bool is_safe(int row, int col, char board[MAX_N][MAX_N], bool rows[MAX_N], bool cols[MAX_N], bool regions[All_ASCII]);
+bool is_safe(int row, int col, char board[MAX_N][MAX_N], bool rows[MAX_N], bool cols[MAX_N], bool regions[All_ASCII], char solution[MAX_N][MAX_N], int N);
 bool place_queen(int row, int col, int N, char board[MAX_N][MAX_N], char solution[MAX_N][MAX_N], bool rows[MAX_N], bool cols[MAX_N], bool regions[All_ASCII]);
 bool solve(int N, char board[MAX_N][MAX_N], char solution[MAX_N][MAX_N]);
 void print_solution(char solution[MAX_N][MAX_N], int N);
@@ -170,7 +170,7 @@ bool task3_parenthesis_validator(char expect)
             continue;
         }
 
-        if (ch == '\n') // End of line
+        if (ch == '\n')
         {
             return expect == '\0';
         }
@@ -225,22 +225,32 @@ void initialize_solution(char solution[MAX_N][MAX_N], int N) {
     }
 }
 
-bool is_safe(int row, int col, char board[MAX_N][MAX_N], bool rows[MAX_N], bool cols[MAX_N], bool regions[All_ASCII])
+bool is_safe(int row, int col, char board[MAX_N][MAX_N], bool rows[MAX_N], bool cols[MAX_N], bool regions[All_ASCII], char solution[MAX_N][MAX_N], int N)
 {
-    return !rows[row] && !cols[col] && !regions[(int)board[row][col]];
+    if (rows[row] || cols[col] || regions[(int)board[row][col]])
+        return false;
+    for (int dr = -1; dr <= 1; dr++) {
+        for (int dc = -1; dc <= 1; dc++) {
+            if (dr == 0 && dc == 0) 
+                continue;
+            int adj_row = row + dr;
+            int adj_col = col + dc;
+            if (adj_row >= 0 && adj_row < N && adj_col >= 0 && adj_col < N && solution[adj_row][adj_col] == 'X')
+                return false;
+        }
+    }
+
+    return true;
 }
 
 bool place_queen(int row, int col, int N, char board[MAX_N][MAX_N], char solution[MAX_N][MAX_N], bool rows[MAX_N], bool cols[MAX_N], bool regions[All_ASCII]) 
 {
     if (col >= N) return true;
     if (row >= N) return false;
-
-    if (is_safe(row, col, board, rows, cols, regions)) {
+    if (is_safe(row, col, board, rows, cols, regions, solution, N)) {
         rows[row] = cols[col] = regions[(int)board[row][col]] = true;
         solution[row][col] = 'X';
-
         if (place_queen(0, col + 1, N, board, solution, rows, cols, regions)) return true;
-
         rows[row] = cols[col] = regions[(int)board[row][col]] = false;
         solution[row][col] = '*';
     }
@@ -249,11 +259,10 @@ bool place_queen(int row, int col, int N, char board[MAX_N][MAX_N], char solutio
 
 bool solve(int N, char board[MAX_N][MAX_N], char solution[MAX_N][MAX_N])
 {
-    if(N < 3)
-        return false;
     bool rows[MAX_N] = {false};
     bool cols[MAX_N] = {false};
     bool regions[All_ASCII] = {false};
+
     return place_queen(0, 0, N, board, solution, rows, cols, regions);
 }
 
@@ -280,7 +289,6 @@ void read_board(int N, char board[MAX_N][MAX_N])
         }
     }
 }
-
 
 void task5_crossword_generator(char grid[MAX_GRID][MAX_GRID]) 
 {
