@@ -25,6 +25,7 @@ typedef struct
 int task1_robot_paths();
 
 double task2_human_pyramid(int r,int c, double weight[LENG2][LENG2]);
+double round_decimal(double value);
 
 void clear_input_buffer();
 bool task3_parenthesis_validator(char expect);
@@ -94,7 +95,7 @@ int main()
                     for (int j = 0; j <= i; j++) 
                     {
                         double w = task2_human_pyramid(i, j, weights);
-                        printf("%.2lf ", ((int)(w * 100)) / 100.0);
+                        printf("%.2lf ", round_decimal(w));
                     }
                     printf("\n");
                 }
@@ -134,6 +135,11 @@ int task1_robot_paths(int RobotX,int RobotY)
     if(RobotX < 0 || RobotY < 0)
         return 0;
     return task1_robot_paths(RobotX - 1,RobotY) + task1_robot_paths(RobotX,RobotY - 1);
+}
+
+double round_decimal(double value)
+{
+    return ((int)(value * 100 + 0.5)) / 100.0;
 }
 
 double task2_human_pyramid(int r, int c, double weights[LENG2][LENG2])
