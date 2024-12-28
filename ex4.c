@@ -172,32 +172,28 @@ bool task3_parenthesis_validator(char expect)
     { 
         if (ch == '\n') 
         {
-            return expect == '\0';  // If we reach a newline, expect should be '\0' for balanced parentheses.
+            return expect == '\0'; 
         }
 
         if (ch == '(' || ch == '[' || ch == '{' || ch == '<') 
         {
-            // Opening brackets, pass the expected closing character to the next recursion level
             char match = (ch == '(') ? ')' :
                          (ch == '[') ? ']' :
                          (ch == '{') ? '}' : '>';
             if (!task3_parenthesis_validator(match)) {
-                return false;  // If we don't find a matching parenthesis, return false
+                return false; 
             }
         } 
         else if (ch == ')' || ch == ']' || ch == '}' || ch == '>') 
         {
-            // Closing brackets, check if it matches the expected character
             return ch == expect;
         } 
         else 
         {
-            // Ignore non-parenthesis characters, no recursion needed here
             continue;
         }
     }
-
-    return expect == '\0';  // Ensure we finish the recursion properly when everything is balanced
+    return expect == '\0';
 }
 
 void task4_queens_battle()
