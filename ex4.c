@@ -93,7 +93,8 @@ int main()
                 {
                     for (int j = 0; j <= i; j++) 
                     {
-                        printf("%.2lf ", task2_human_pyramid(i, j, weights));
+                        double w = task2_human_pyramid(i, j, weights);
+                        printf("%.2lf ", ((int)(w * 100)) / 100.0);
                     }
                     printf("\n");
                 }
